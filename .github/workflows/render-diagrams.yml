@@ -24,3 +24,4 @@ jobs:
         with:
           workspace: 'docs/workspace.json'
           output-dir: 'docs/diagrams'
+          version: v0.0.5
