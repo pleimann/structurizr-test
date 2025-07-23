@@ -4,10 +4,14 @@ on:
   workflow_dispatch:
 
   push:
+    paths:
+      - docs/workspace.json
     branches:
       - main
 
   pull_request:
+    paths:
+      - docs/workspace.json
     branches:
       - main
 
