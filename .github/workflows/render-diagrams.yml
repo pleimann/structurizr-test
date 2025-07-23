@@ -1,0 +1,26 @@
+name: Render Diagrams
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Render Architecture Diagrams
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Render Structurizr diagrams
+        uses: pleimann/structurizr@v0.0.5
+        with:
+          workspace: 'docs/workspace.json'
+          output-dir: 'docs/diagrams'
