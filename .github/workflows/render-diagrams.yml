@@ -11,6 +11,10 @@ on:
     branches:
       - main
 
+permissions:                # Job-level permissions configuration starts here
+  contents: write           # 'write' access to repository contents
+  pull-requests: write      # 'write' access to pull requests
+
 jobs:
   test:
     name: Render Architecture Diagrams
@@ -25,3 +29,23 @@ jobs:
           workspace: 'docs/workspace.json'
           output-dir: 'docs/diagrams'
           version: v0.0.5
+
+      - name: Check for Changes
+        id: check_changes
+        run: |
+          git add docs/diagrams/*.png
+          if git diff --staged --quiet; then
+            echo "CHANGES_EXIST=false" >> $GITHUB_ENV
+          else
+            echo "CHANGES_EXIST=true" >> $GITHUB_ENV
+          fi
+        shell: bash
+
+      - name: Commit and Push Diagrams
+        if: env.CHANGES_EXIST == 'true'
+        run: |
+          git config --global user.name github-actions
+          git config --global user.email github-actions@github.com
+          git commit -m "chore: Update Structurizr diagrams"
+          git push origin ${{ github.head_ref }}
+        shell: bash
