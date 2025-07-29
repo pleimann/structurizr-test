@@ -5,13 +5,13 @@ on:
 
   push:
     paths:
-      - docs/workspace.json
+      - docs/
     branches:
       - main
 
   pull_request:
     paths:
-      - docs/workspace.json
+      - docs/
     branches:
       - main
 
@@ -27,8 +27,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Render Structurizr diagrams
-        uses: pleimann/structurizr@v1
+      - name: Export JSON from DSL and render
+        uses: pleimann/structurizr-renderer@v2
+        with:
+          workspace: 'docs/workspace.dsl'
+          output-dir: 'docs/diagrams'
+          export-format: 'json'
+          export-output: 'docs/exported-workspace.json'
+      
+      - name: Export JSON from existing JSON (re-export)
+        uses: pleimann/structurizr-renderer@v2
         with:
           workspace: 'docs/workspace.json'
           output-dir: 'docs/diagrams'
