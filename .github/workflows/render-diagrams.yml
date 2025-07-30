@@ -26,25 +26,23 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
-      - name: Export JSON from DSL and render
-        uses: pleimann/structurizr-renderer@v2
-        with:
-          workspace: 'docs/workspace.dsl'
-          output-dir: 'docs/diagrams'
-          export-format: 'json'
-          export-output: 'docs/exported-workspace.json'
-      
-      - name: Export JSON from existing JSON (re-export)
-        uses: pleimann/structurizr-renderer@v2
+        
+      - name: Render from JSON workspace
+        uses: pleimann/structurizr-renderer@v1
         with:
           workspace: 'docs/workspace.json'
-          output-dir: 'docs/diagrams'
+          output-dir: 'docs/diagrams/json'
+      
+      - name: Render from DSL workspace
+        uses: pleimann/structurizr-renderer@v1
+        with:
+          workspace: 'docs/workspace.dsl'
+          output-dir: 'docs/diagrams/dsl'
 
       - name: Check for Changes
         id: check_changes
         run: |
-          git add docs/diagrams/*.png
+          git add docs/diagrams/**/*.png
           if git diff --staged --quiet; then
             echo "CHANGES_EXIST=false" >> $GITHUB_ENV
           else
